@@ -1,40 +1,48 @@
-// transition.js
+(function () {
+  if (!window.__pageTransitionInitialized) {
+    window.__pageTransitionInitialized = true;
 
-function showOverlay() {
-  const existing = document.getElementById('page-transition');
-  if (existing) existing.remove();
+    function showOverlay() {
+      let overlay = document.getElementById('page-transition');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'page-transition';
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'black';
+        overlay.style.zIndex = '9999';
+        overlay.style.pointerEvents = 'none';
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.6s ease-in-out';
 
-  const overlay = document.createElement('div');
-  overlay.id = 'page-transition';
-  Object.assign(overlay.style, {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'black',
-    zIndex: '9999',
-    opacity: '1',
-    pointerEvents: 'none',
-    transition: 'opacity 0.6s ease'
-  });
+        document.body.appendChild(overlay);
+      }
 
-  document.body.appendChild(overlay);
+      // Trigger the fade in
+      overlay.style.opacity = '1';
 
-  setTimeout(() => {
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.remove(), 600);
-  }, 50);
-}
+      // Then fade it back out
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+      }, 200); // visible for a moment
 
-// Runs on full refresh / first load
-window.addEventListener('load', () => {
-  showOverlay();
-});
+      // Optional: remove after fade out to clean up
+      setTimeout(() => {
+        overlay.remove();
+      }, 1000);
+    }
 
-// Listen for Wix-internal page changes
-window.addEventListener('message', (ev) => {
-  if (ev.data && ev.data.type === 'run-page-transition') {
-    showOverlay();
+    // Listen for Wix postMessage
+    window.addEventListener('message', (ev) => {
+      if (ev.data && ev.data.type === 'run-page-transition') {
+        showOverlay();
+      }
+    });
+
+    // Also run on initial load
+    window.addEventListener('DOMContentLoaded', showOverlay);
   }
-});
+})();
