@@ -28,13 +28,16 @@ class CustomCursor extends HTMLElement {
 connectedCallback() {
   const cursor = document.getElementById('custom-cursor');
 
+  // No transition on transform by default
+  cursor.style.transition = 'none';
+
   document.addEventListener('mousemove', (e) => {
-    const x = e.clientX - 9; // half of 18px for centering
+    const x = e.clientX - 9;
     const y = e.clientY - 9;
     cursor.style.transform = `translate(${x}px, ${y}px) scale(1)`;
   });
 
-  // 💥 Click pulse animation
+  // Apply transition *only* for click pulse
   document.addEventListener('mousedown', () => {
     cursor.style.transition = 'transform 0.05s ease, scale 0.15s ease';
     cursor.style.transform += ' scale(1.8)';
@@ -44,16 +47,20 @@ connectedCallback() {
     const computedStyle = getComputedStyle(cursor);
     const matrix = computedStyle.transform.match(/matrix.*\((.+)\)/);
     
-    // Extract translateX and translateY from current transform
     let translate = [0, 0];
     if (matrix) {
       const values = matrix[1].split(', ');
       translate = [parseFloat(values[4]), parseFloat(values[5])];
     }
 
-    cursor.style.transform = `translate(${translate[0]}px, ${translate[1]}px) scale(1)`;
+    // Remove transition after click pulse finishes
+    setTimeout(() => {
+      cursor.style.transition = 'none';
+      cursor.style.transform = `translate(${translate[0]}px, ${translate[1]}px) scale(1)`;
+    }, 150);
   });
 }
+
 
 
 }
