@@ -27,7 +27,14 @@ function showOverlay() {
   }, 50);
 }
 
-// On first page load
+// Runs on full refresh / first load
 window.addEventListener('load', () => {
   showOverlay();
+});
+
+// Listen for Wix-internal page changes
+window.addEventListener('message', (ev) => {
+  if (ev.data && ev.data.type === 'run-page-transition') {
+    showOverlay();
+  }
 });
