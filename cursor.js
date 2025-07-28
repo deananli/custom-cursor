@@ -37,12 +37,12 @@ class CustomCursor extends HTMLElement {
     mouseY = e.clientY - 9;
   });
 
-  const animate = () => {
-    currentX += (mouseX - currentX) * 0.05;
-    currentY += (mouseY - currentY) * 0.05;
-    cursor.style.transform = `translate(${currentX}px, ${currentY}px) scale(1)`;
-    requestAnimationFrame(animate);
-  };
+ document.addEventListener('mousemove', (e) => {
+  const x = e.clientX - 9; // adjust for cursor size
+  const y = e.clientY - 9;
+  cursor.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+});
+
 
   animate();
 
