@@ -38,8 +38,8 @@ class CustomCursor extends HTMLElement {
   });
 
   const animate = () => {
-    currentX += (mouseX - currentX) * 0.2;
-    currentY += (mouseY - currentY) * 0.2;
+    currentX += (mouseX - currentX) * 0.4;
+    currentY += (mouseY - currentY) * 0.4;
     cursor.style.transform = `translate(${currentX}px, ${currentY}px) scale(1)`;
     requestAnimationFrame(animate);
   };
