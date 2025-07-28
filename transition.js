@@ -1,8 +1,8 @@
 // transition.js
 
 function createOverlay() {
-  const existing = document.querySelector('#page-transition');
-  if (existing) return existing;
+  const existing = document.getElementById('page-transition');
+  if (existing) existing.remove();
 
   const overlay = document.createElement('div');
   overlay.id = 'page-transition';
@@ -13,36 +13,28 @@ function createOverlay() {
   overlay.style.height = '100vh';
   overlay.style.backgroundColor = 'black';
   overlay.style.zIndex = '9999';
+  overlay.style.transition = 'opacity 0.5s ease';
   overlay.style.opacity = '1';
   overlay.style.pointerEvents = 'none';
-  overlay.style.transition = 'opacity 0.8s ease';
-
   document.body.appendChild(overlay);
-  return overlay;
-}
 
-function fadeInOverlay() {
-  const overlay = createOverlay();
-  overlay.style.opacity = '1';
-}
-
-function fadeOutOverlay() {
-  const overlay = document.querySelector('#page-transition');
-  if (!overlay) return;
-  overlay.style.opacity = '0';
   setTimeout(() => {
-    overlay.remove();
-  }, 1000);
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+    }, 500);
+  }, 50);
 }
 
-// On load (initial visit or full refresh)
-window.addEventListener('load', () => {
-  fadeInOverlay();
-  setTimeout(() => fadeOutOverlay(), 200);
-});
+// Run on initial load
+createOverlay();
 
-// On Wix internal page change
-window.addEventListener('pageshow', () => {
-  fadeInOverlay();
-  setTimeout(() => fadeOutOverlay(), 200);
+// Watch for Wix navigation
+const observer = new MutationObserver(() => {
+  if (window.location.href !== observer.lastUrl) {
+    observer.lastUrl = window.location.href;
+    createOverlay();
+  }
 });
+observer.lastUrl = window.location.href;
+observer.observe(document.body, { childList: true, subtree: true });
