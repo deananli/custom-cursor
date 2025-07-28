@@ -9,8 +9,8 @@ class CustomCursor extends HTMLElement {
     this.cursor.id = 'custom-cursor';
 
     Object.assign(this.cursor.style, {
-      width: '20px',
-      height: '20px',
+      width: '19px',
+      height: '19px',
       position: 'fixed',
       top: '0',
       left: '0',
