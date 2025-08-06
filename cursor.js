@@ -44,7 +44,7 @@ cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
 
   // Apply transition *only* for click pulse
   document.addEventListener('mousedown', () => {
-    cursor.style.transition = 'transform 0.05s ease, scale 0.15s ease';
+    cursor.style.transition = 'transform 0.05s ease';
     cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1.8)`;
   });
 
@@ -61,7 +61,7 @@ cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
     // Remove transition after click pulse finishes
     setTimeout(() => {
       cursor.style.transition = 'none';
-      setTimeout(() => {   cursor.style.transition = 'none';   cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`; }, 150);
+      cursor.style.transition = 'transform 0.05s ease'; cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
     }, 150);
   });
 }
@@ -71,4 +71,5 @@ cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
 }
 
 customElements.define('custom-cursor', CustomCursor);
+
 
