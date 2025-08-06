@@ -26,6 +26,9 @@ class CustomCursor extends HTMLElement {
   }
 
 connectedCallback() {
+  let lastX = 0;
+let lastY = 0;
+  
   const cursor = document.getElementById('custom-cursor');
 
   // No transition on transform by default
@@ -34,13 +37,15 @@ connectedCallback() {
   document.addEventListener('mousemove', (e) => {
     const x = e.clientX - 9;
     const y = e.clientY - 9;
-    cursor.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+    lastX = e.clientX - 9;
+lastY = e.clientY - 9;
+cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
   });
 
   // Apply transition *only* for click pulse
   document.addEventListener('mousedown', () => {
     cursor.style.transition = 'transform 0.05s ease, scale 0.15s ease';
-    cursor.style.transform += ' scale(1.8)';
+    cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1.8)`;
   });
 
   document.addEventListener('mouseup', () => {
@@ -56,7 +61,7 @@ connectedCallback() {
     // Remove transition after click pulse finishes
     setTimeout(() => {
       cursor.style.transition = 'none';
-      cursor.style.transform = `translate(${translate[0]}px, ${translate[1]}px) scale(1)`;
+      setTimeout(() => {   cursor.style.transition = 'none';   cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`; }, 150);
     }, 150);
   });
 }
@@ -66,3 +71,4 @@ connectedCallback() {
 }
 
 customElements.define('custom-cursor', CustomCursor);
+
