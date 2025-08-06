@@ -19,57 +19,24 @@ class CustomCursor extends HTMLElement {
       mixBlendMode: 'difference',
       pointerEvents: 'none',
       zIndex: '9999',
-      transition: 'transform 0.05s ease'
+      transition: 'none'
     });
 
     document.body.appendChild(this.cursor);
   }
 
-connectedCallback() {
-  let lastX = 0;
-let lastY = 0;
-  
-  const cursor = document.getElementById('custom-cursor');
+  connectedCallback() {
+    let lastX = 0;
+    let lastY = 0;
 
-  // No transition on transform by default
-  cursor.style.transition = 'none';
+    const cursor = document.getElementById('custom-cursor');
 
-  document.addEventListener('mousemove', (e) => {
-    const x = e.clientX - 9;
-    const y = e.clientY - 9;
-    lastX = e.clientX - 9;
-lastY = e.clientY - 9;
-cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
-  });
-
-  // Apply transition *only* for click pulse
-  document.addEventListener('mousedown', () => {
-    cursor.style.transition = 'transform 0.05s ease';
-    cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1.8)`;
-  });
-
-  document.addEventListener('mouseup', () => {
-    const computedStyle = getComputedStyle(cursor);
-    const matrix = computedStyle.transform.match(/matrix.*\((.+)\)/);
-    
-    let translate = [0, 0];
-    if (matrix) {
-      const values = matrix[1].split(', ');
-      translate = [parseFloat(values[4]), parseFloat(values[5])];
-    }
-
-    // Remove transition after click pulse finishes
-    setTimeout(() => {
-      cursor.style.transition = 'none';
-      cursor.style.transition = 'transform 0.05s ease'; cursor.style.transform = `translate(${lastX}px, ${lastY}px) scale(1)`;
-    }, 150);
-  });
-}
-
-
-
+    document.addEventListener('mousemove', (e) => {
+      lastX = e.clientX - 9;
+      lastY = e.clientY - 9;
+      cursor.style.transform = `translate(${lastX}px, ${lastY}px)`;
+    });
+  }
 }
 
 customElements.define('custom-cursor', CustomCursor);
-
-
